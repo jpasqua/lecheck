@@ -182,7 +182,7 @@ fi
 section "Checking for terminal multiplexers..."
 if ps -eo comm | grep -q '^tmux:' || ps -eo comm | grep -q '^screen'; then
     color_print "Terminal multiplexer (tmux/screen) running:" "$WARNING" 1
-    ps aux | grep '[t]mux' | color_print_lines "$ERROR" 2
+    ps -eo comm | grep '^tmux:' | color_print_lines "$ERROR" 2
     pgrep -ax screen | color_print_lines "$ERROR" 2
     ((notices++))
 else
