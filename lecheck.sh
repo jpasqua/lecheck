@@ -20,8 +20,8 @@ GOOD=$BOLD_GREEN
 WARNING=$BOLD_YELLOW
 ERROR=$BOLD_RED
 
-# Function: color_print "message" $COLOR indent_level
-color_print() {
+# Function: message "message" $COLOR indent_level
+message() {
     local message="$1"
     local color="$2"
     local indent="${3:-0}"
@@ -36,7 +36,7 @@ color_print() {
     printf "%b%s%b\n" "$color" "${indent_str}${message}" "$NC"
 }
 
-color_print_lines() {
+message_lines() {
     local color="$1"
     local indent="${2:-0}"
     local line
@@ -58,7 +58,7 @@ section() {
     printf "\n\n"
 
     # Print the message in the TITLE color with no indent
-    color_print "$message" "$TITLE" 0
+    message "$message" "$TITLE" 0
 }
 
 # Detect Desktop Environment
@@ -93,29 +93,29 @@ else
 fi
 
 # Display Distro and DE
-color_print "Detected distribution: $DISTRO" "$GOOD" 0
-color_print "Detected desktop environment: $DE" "$GOOD" 0
+message "Detected distribution: $DISTRO" "$GOOD" 0
+message "Detected desktop environment: $DE" "$GOOD" 0
 
 # Suggest workspace keybindings
 case "$DE" in
   GNOME)
-    color_print "Tip: Press Super to open the workspace overview." "$WARNING" 1
-    color_print "Tip: Press Super + Page Up / Page Down to switch between desktops." "$WARNING" 1
+    message "Tip: Press Super to open the workspace overview." "$WARNING" 1
+    message "Tip: Press Super + Page Up / Page Down to switch between desktops." "$WARNING" 1
     ;;
   KDE)
-    color_print "Tip: Try Ctrl+F8 for Desktop Grid, or Ctrl + Alt + ↑ ." "$WARNING" 1
-    color_print "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
+    message "Tip: Try Ctrl+F8 for Desktop Grid, or Ctrl + Alt + ↑ ." "$WARNING" 1
+    message "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
     ;;
   XFCE|MATE|LXQT)
-    color_print "Tip: Use Panel to show desktops." "$WARNING" 1
-    color_print "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
+    message "Tip: Use Panel to show desktops." "$WARNING" 1
+    message "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
     ;;
   CINNAMON)
-    color_print "Tip: Use Ctrl+Alt+↑ to show all desktops, Ctrl+Alt+←/→ to switch." "$WARNING" 1
-    color_print "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
+    message "Tip: Use Ctrl+Alt+↑ to show all desktops, Ctrl+Alt+←/→ to switch." "$WARNING" 1
+    message "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
     ;;
   *)
-    color_print "Desktop environment not recognized. Try checking manually." "$WARNING" 1
+    message "Desktop environment not recognized. Try checking manually." "$WARNING" 1
     ;;
 esac
 
@@ -133,22 +133,24 @@ notices=0
 # 1. Check for VM
 section "Checking for virtual environments..."
 if systemd-detect-virt --quiet; then
-    color_print "System appears to be running in a virtual machine:" "$WARNING" 1
-    systemd-detect-virt | color_print_lines "$ERROR" 1
+    message "System appears to be running in a virtual machine:" "$WARNING" 1
+    systemd-detect-virt | message_lines "$ERROR" 1
+    message "Please do not run your test session in a virtual machine." "$TITLE" 2
     ((notices++))
 else
-    color_print "No virtualization detected" "$GREEN" 1
+    message "No virtualization detected" "$GREEN" 1
 fi
 
 # 2. Check for multiple users
 section "Checking for multiple users..."
 users=$(who | awk '{print $1}' | sort | uniq | wc -l)
 if [ "$users" -gt 1 ]; then
-    color_print "Multiple users are currently logged in:" "$WARNING" 1
-    who | awk '{print $1}' | sort | uniq | color_print_lines "$ERROR" 1
+    message "Multiple users are currently logged in:" "$WARNING" 1
+    who | awk '{print $1}' | sort | uniq | message_lines "$ERROR" 1
+    message "Please ask other users to log out of your system during the test." "$TITLE" 2
     ((notices++))
 else
-    color_print "No additional users detected" "$GOOD" 1
+    message "No additional users detected" "$GOOD" 1
 fi
 
 # 3. Check for multiple graphical sessions
@@ -158,47 +160,49 @@ gui_sessions=$(loginctl list-sessions --no-legend | awk '{print $1}' | while rea
 done | grep -E 'x11|wayland' | wc -l)
 
 if [ "$gui_sessions" -gt 1 ]; then
-    color_print "Multiple desktop sessions detected:" "$WARNING" 1
-    loginctl list-sessions | color_print_lines "$ERROR" 1
+    message "Multiple desktop sessions detected:" "$WARNING" 1
+    loginctl list-sessions | message_lines "$ERROR" 1
+    message "There are multiple window systems running. Please use only one." "$TITLE" 2
     ((notices++))
 else
-    color_print "Only one GUI session detected" "$GOOD" 1
+    message "Only one GUI session detected" "$GOOD" 1
 fi
 
 # 4. Check for remote control or screen share tools (excluding Zoom)
 section "Checking for remote access tools..."
 if bad_procs=$(ps aux | grep -E "$SUSPECT_PROCS" | grep -v grep); then
     if [ -n "$bad_procs" ]; then
-        color_print "Please review for potential remote access tools such as:" "$WARNING" 1
-        color_print "$SUSPECT_PROCS" "$WARNING" 1
-        echo "$bad_procs" | color_print_lines "$ERROR" 2
+        message "Please review for potential remote access tools such as:" "$WARNING" 1
+        message "$SUSPECT_PROCS" "$WARNING" 1
+        echo "$bad_procs" | message_lines "$ERROR" 2
         ((notices++))
     fi
 else
-    color_print "No remote control processes detected" "$GOOD" 1
+    message "No remote control processes detected" "$GOOD" 1
 fi
 
 # 5. Check for terminal multiplexers (e.g., tmux, screen)
 section "Checking for terminal multiplexers..."
 if ps -eo comm | grep -q '^tmux:' || ps -eo comm | grep -q '^screen'; then
-    color_print "Terminal multiplexer (tmux/screen) running:" "$WARNING" 1
-    ps -eo comm | grep '^tmux:' | color_print_lines "$ERROR" 2
-    pgrep -ax screen | color_print_lines "$ERROR" 2
+    message "Terminal multiplexer (tmux/screen) running:" "$WARNING" 1
+    ps -eo comm | grep '^tmux:' | message_lines "$ERROR" 2
+    pgrep -ax screen | message_lines "$ERROR" 2
+    message "Please stop any multiplexers, even detached ones." "$TITLE" 2
     ((notices++))
 else
-    color_print "No terminal multiplexers" "$GOOD" 1
+    message "No terminal multiplexers" "$GOOD" 1
 fi
 
 # Summary
 section "Summary"
 if [ "$notices" -eq 0 ]; then
-    color_print "Good to go!" "$GOOD" 1
+    message "Good to go!" "$GOOD" 1
     exit 0
 else
     if [ "$notices" -eq 1 ]; then
-        color_print "There was 1 notice produced. Please review." "$WARNING" 1
+        message "There was 1 notice produced. Please review." "$WARNING" 1
     else
-        color_print "There were $notices notices produced. Please review." "$WARNING" 1
+        message "There were $notices notices produced. Please review." "$WARNING" 1
     fi
     exit 1
 fi
