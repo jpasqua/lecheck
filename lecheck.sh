@@ -180,10 +180,10 @@ fi
 
 # 5. Check for terminal multiplexers (e.g., tmux, screen)
 section "Checking for terminal multiplexers..."
-if ps -eo comm | grep -qx tmux || pgrep -x screen >/dev/null; then
+if ps -eo comm | grep -q '^tmux:' || ps -eo comm | grep -q '^screen'; then
     color_print "Terminal multiplexer (tmux/screen) running:" "$WARNING" 1
-    ps -eo comm | grep -qx tmux | color_print_lines "$ERROR" 2
-    pgrep -ax 'screen' | color_print_lines "$ERROR" 2
+    ps aux | grep '[t]mux' | color_print_lines "$ERROR" 2
+    pgrep -ax screen | color_print_lines "$ERROR" 2
     ((notices++))
 else
     color_print "No terminal multiplexers" "$GOOD" 1
