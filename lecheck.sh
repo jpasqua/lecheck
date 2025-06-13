@@ -162,19 +162,20 @@ done | grep -E 'x11|wayland' | wc -l)
 if [ "$gui_sessions" -gt 1 ]; then
     message "Multiple desktop sessions detected:" "$WARNING" 1
     loginctl list-sessions | message_lines "$ERROR" 1
-    message "There are multiple window systems running. Please use only one." "$TITLE" 2
+    message "Please use only one GUI session. There are multiple." "$TITLE" 2
     ((notices++))
 else
     message "Only one GUI session detected" "$GOOD" 1
 fi
 
 # 4. Check for remote control or screen share tools (excluding Zoom)
-section "Checking for remote access tools..."
+section "Checking for screen-casting tools..."
 if bad_procs=$(ps aux | grep -E "$SUSPECT_PROCS" | grep -v grep); then
     if [ -n "$bad_procs" ]; then
-        message "Please review for potential remote access tools such as:" "$WARNING" 1
+        message "Please review for potential screen-casting tools such as:" "$WARNING" 1
         message "$SUSPECT_PROCS" "$WARNING" 1
         echo "$bad_procs" | message_lines "$ERROR" 2
+        message "Please quit any screen-casting tools." "$TITLE" 2
         ((notices++))
     fi
 else
@@ -185,7 +186,7 @@ fi
 section "Checking for terminal multiplexers..."
 if ps -eo comm | grep -q '^tmux:' || ps -eo comm | grep -q '^screen'; then
     message "Terminal multiplexer (tmux/screen) running:" "$WARNING" 1
-    ps -eo comm | grep '^tmux:' | message_lines "$ERROR" 2
+    ps -eo comm | grep '^tmux:' | message_lines "$ERROR" 1
     pgrep -ax screen | message_lines "$ERROR" 2
     message "Please stop any multiplexers, even detached ones." "$TITLE" 2
     ((notices++))
