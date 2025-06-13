@@ -101,6 +101,7 @@ case "$DE" in
   GNOME)
     message "Tip: Press Super to open the workspace overview." "$WARNING" 1
     message "Tip: Press Super + Page Up / Page Down to switch between desktops." "$WARNING" 1
+    message "Tip: Super is often the Windows key or Command key" "$WARNING" 1
     ;;
   KDE)
     message "Tip: Try Ctrl+F8 for Desktop Grid, or Ctrl + Alt + ↑ ." "$WARNING" 1
@@ -187,7 +188,7 @@ section "Checking for terminal multiplexers..."
 if ps -eo comm | grep -q '^tmux:' || ps -eo comm | grep -q '^screen'; then
     message "Terminal multiplexer (tmux/screen) running:" "$WARNING" 1
     ps -eo comm | grep '^tmux:' | message_lines "$ERROR" 1
-    pgrep -ax screen | message_lines "$ERROR" 2
+    pgrep -ax screen | message_lines "$ERROR" 1
     message "Please stop any multiplexers, even detached ones." "$TITLE" 2
     ((notices++))
 else
