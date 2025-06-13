@@ -179,15 +179,15 @@ else
 fi
 
 # 5. Check for terminal multiplexers (e.g., tmux, screen)
-# section "Checking for terminal multiplexers..."
-# if pgrep -f tmux >/dev/null || pgrep -x screen >/dev/null; then
-#     color_print "Terminal multiplexer (tmux/screen) running:" "$WARNING" 1
-#     ps aux | grep '[t]mux' | color_print_lines "$ERROR" 2
-#     pgrep -ax 'screen' | color_print_lines "$ERROR" 2
-#     ((notices++))
-# else
-#     color_print "No terminal multiplexers" "$GOOD" 1
-# fi
+section "Checking for terminal multiplexers..."
+if ps -eo comm | grep -qx tmux || pgrep -x screen >/dev/null; then
+    color_print "Terminal multiplexer (tmux/screen) running:" "$WARNING" 1
+    ps -eo comm | grep -qx tmux | color_print_lines "$ERROR" 2
+    pgrep -ax 'screen' | color_print_lines "$ERROR" 2
+    ((notices++))
+else
+    color_print "No terminal multiplexers" "$GOOD" 1
+fi
 
 # Summary
 section "Summary"
