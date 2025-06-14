@@ -125,6 +125,10 @@ message "Detected distribution: $DISTRO" "$GOOD" 0
 message "Detected desktop environment: $DE" "$GOOD" 0
 
 # Suggest workspace keybindings
+if [[ "$DE" != "UNKNOWN" ]]; then
+  section "Please manually check for multiple desktops as described below."
+  message "There may be a desktop switcher in the taskbar." "$TITLE" 2
+fi
 case "$DE" in
   GNOME)
     message "Tip: Press Super to open the workspace overview." "$WARNING" 1
@@ -144,13 +148,11 @@ case "$DE" in
     message "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
     ;;
   *)
-    message "Desktop environment not recognized. Try checking manually." "$WARNING" 1
+    message "We don't have recommended keystokes. Try checking manually." "$WARNING" 1
     ;;
 esac
 
-echo "Press ENTER to continue..."
-read dummy
-
+read -p "Press ENTER to continue..."
 
 section "=== Exam Environment Check ===" 
 
