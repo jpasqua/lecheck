@@ -127,25 +127,25 @@ message "Detected desktop environment: $DE" "$GOOD" 0
 # Suggest workspace keybindings
 if [[ "$DE" != "UNKNOWN" ]]; then
   section "Please manually check for multiple desktops as described below."
-  message "There may be a desktop switcher in the taskbar." "$TITLE" 2
+  message "There may be a desktop switcher in the taskbar." "$TITLE" 1
 fi
 case "$DE" in
   GNOME)
-    message "Tip: Press Super to open the workspace overview." "$WARNING" 1
-    message "Tip: Press Super + Page Up / Page Down to switch between desktops." "$WARNING" 1
-    message "Tip: Super is often the Windows key or Command key" "$WARNING" 1
+    message "Press Super to open the workspace overview." "$WARNING" 1
+    message "Press Super + Page Up / Page Down to switch between desktops." "$WARNING" 1
+    message "Super is often the Windows key or Command key" "$WARNING" 1
     ;;
   KDE)
-    message "Tip: Try Ctrl+F8 for Desktop Grid, or Ctrl + Alt + ↑ ." "$WARNING" 1
-    message "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
+    message "Try Ctrl+F8 for Desktop Grid, or Ctrl + Alt + ↑ ." "$WARNING" 1
+    message "Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
     ;;
   XFCE|MATE|LXQT)
-    message "Tip: Use Panel to show desktops." "$WARNING" 1
-    message "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
+    message "Use Panel to show desktops." "$WARNING" 1
+    message "Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
     ;;
   CINNAMON)
-    message "Tip: Use Ctrl+Alt+↑ to show all desktops, Ctrl+Alt+←/→ to switch." "$WARNING" 1
-    message "Tip: Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
+    message "Use Ctrl+Alt+↑ to show all desktops, Ctrl+Alt+←/→ to switch." "$WARNING" 1
+    message "Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
     ;;
   *)
     message "We don't have recommended keystokes. Try checking manually." "$WARNING" 1
