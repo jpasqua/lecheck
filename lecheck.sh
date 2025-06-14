@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # ANSI Color Constants
 RED='\033[0;31m'
@@ -61,28 +61,56 @@ section() {
     message "$message" "$TITLE" 0
 }
 
-# Detect Desktop Environment
-DE="${XDG_CURRENT_DESKTOP:-$DESKTOP_SESSION}"
+detect_desktop_environment() {
+  local de=""
 
-if [[ -z "$DE" ]]; then
-  if pgrep -x gnome-session >/dev/null; then
-    DE="GNOME"
-  elif pgrep -x plasmashell >/dev/null; then
-    DE="KDE"
-  elif pgrep -x xfce4-session >/dev/null; then
-    DE="XFCE"
-  elif pgrep -x mate-session >/dev/null; then
-    DE="MATE"
-  elif pgrep -x cinnamon >/dev/null; then
-    DE="CINNAMON"
-  elif pgrep -x budgie-wm >/dev/null; then
-    DE="BUDGIE"
-  elif pgrep -x lxqt-session >/dev/null; then
-    DE="LXQT"
+  # First try environment variables
+  if [[ -n "$XDG_CURRENT_DESKTOP" ]]; then
+    de="$XDG_CURRENT_DESKTOP"
+  elif [[ -n "$DESKTOP_SESSION" ]]; then
+    de="$DESKTOP_SESSION"
   else
-    DE="UNKNOWN"
+    # Fallback: check for known session processes by command name
+    if ps -eo comm | grep -q '^gnome-session'; then
+      de="GNOME"
+    elif ps -eo comm | grep -q '^plasmashell$'; then
+      de="KDE"
+    elif ps -eo comm | grep -q '^xfce4-session$'; then
+      de="XFCE"
+    elif ps -eo comm | grep -q '^mate-session$'; then
+      de="MATE"
+    elif ps -eo comm | grep -q '^cinnamon$'; then
+      de="CINNAMON"
+    elif ps -eo comm | grep -q '^budgie-wm$'; then
+      de="BUDGIE"
+    elif ps -eo comm | grep -q '^lxqt-session$'; then
+      de="LXQT"
+    elif ps -eo comm | grep -q '^sway$'; then
+      de="SWAY"
+    elif ps -eo comm | grep -q '^i3$'; then
+      de="i3"
+    else
+      de="UNKNOWN"
+    fi
   fi
-fi
+
+  # Normalize some common cases
+  case "$de" in
+    ubuntu:GNOME) echo "GNOME" ;;
+    KDE|kde*) echo "KDE" ;;
+    XFCE|xfce*) echo "XFCE" ;;
+    MATE|mate*) echo "MATE" ;;
+    Cinnamon|cinnamon*) echo "CINNAMON" ;;
+    Budgie|budgie*) echo "BUDGIE" ;;
+    LXQt|lxqt*) echo "LXQT" ;;
+    GNOME|gnome*) echo "GNOME" ;;
+    i3) echo "i3" ;;
+    Sway|sway) echo "SWAY" ;;
+    *) echo "$de" ;;
+  esac
+}
+
+DE=$(detect_desktop_environment)
 
 # Detect Distro
 if [ -f /etc/os-release ]; then
