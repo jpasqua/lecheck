@@ -104,6 +104,7 @@ detect_desktop_environment() {
     Budgie|budgie*) echo "BUDGIE" ;;
     LXQt|lxqt*) echo "LXQT" ;;
     GNOME|gnome*) echo "GNOME" ;;
+    LXDE|lxde*) echo "LXDE" ;;
     i3) echo "i3" ;;
     Sway|sway) echo "SWAY" ;;
     *) echo "$de" ;;
@@ -186,6 +187,10 @@ case "$DE" in
   XFCE|MATE|LXQT)
     message "Use Panel to show desktops." "$WARNING" 1
     message "Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
+    ;;
+  LXDE)
+    message "Use Super+Alt+←/→/↑/↓ to navigate a desktop grid." "$WARNING" 1
+    message "Super is often the Windows key or Command key" "$WARNING" 1
     ;;
   CINNAMON)
     message "Use Ctrl+Alt+↑ to show all desktops, Ctrl+Alt+←/→ to switch." "$WARNING" 1
