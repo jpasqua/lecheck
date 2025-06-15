@@ -110,6 +110,50 @@ detect_desktop_environment() {
   esac
 }
 
+show_explanation() {
+    cat <<EOF
+
+lecheck.sh - Linux Environment Check
+
+This script performs a series of checks to ensure the testing environment is
+secure and transparent for remote proctoring.
+Below is a list of what it checks and why:
+
+  1. **Virtualization/Emulation Detection**
+     - Verifies that the system is not running inside a virtual machine
+       or emulator.
+     - Reason: A user could share only the guest VM screen, hiding unauthorized
+       material in the host operating system.
+
+  2. **Multiple Window Systems**
+     - Checks for multiple concurrent Window systems (e.g. two instances of
+       X, wayland, or a combination).
+     - Reason: Prevents switching to another user account or hidden desktop
+       that may contain prohibited material.
+
+  3. **Terminal Multiplexers (tmux/screen)**
+     - Detects backgrounded terminal multiplexers.
+     - Reason: These tools can maintain hidden terminal sessions that
+       survive window closures.
+
+  4. **Multiple Active User Sessions**
+     - Identifies whether multiple users are logged in.
+     - Reason: Prevents hidden collaboration.
+
+  5. **Processes Associated with Remote Access or Recording**
+     - Scans for tools like 'vnc', 'teamviewer', 'obs', and other
+       screen recorders or streamers.
+     - Reason: Detects potential screen broadcasting, recording, or
+       unauthorized monitoring.
+
+EOF
+}
+
+if [[ "$1" == "-?" ]]; then
+    show_explanation
+    exit 0
+fi
+
 DE=$(detect_desktop_environment)
 
 # Detect Distro
