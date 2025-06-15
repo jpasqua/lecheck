@@ -104,7 +104,7 @@ detect_desktop_environment() {
     Budgie|budgie*) echo "BUDGIE" ;;
     LXQt|lxqt*) echo "LXQT" ;;
     GNOME|gnome*) echo "GNOME" ;;
-    LXDE|lxde*) echo "LXDE" ;;
+    LXDE*|lxde*) echo "LXDE" ;;
     i3) echo "i3" ;;
     Sway|sway) echo "SWAY" ;;
     *) echo "$de" ;;
