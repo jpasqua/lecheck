@@ -21,14 +21,15 @@ bash -c "$(wget -qO- https://tinyurl.com/hbe34z3w)"
 
 To get an explanation of what the script is looking for, and why, use ` -- -?`:
 ```sh
-bash -c "$(curl -fsSL https://tinyurl.com/hbe34z3w)" -- -?
+bash -c "$(wget -qO- https://tinyurl.com/hbe34z3w)" -- -?
 ```
 
-## The same commands using curl:
+## Alternative approach using curl
+If wget is not installed, but curl is, you can use these commands:
 
 Download the script, set permissions, and run it:
 ```sh
-curl -s https://tinyurl.com/hbe34z3w > lecheck.sh
+curl -fsSL https://tinyurl.com/hbe34z3w > lecheck.sh
 chmod +x lecheck.sh
 ./lecheck.sh
 ```
