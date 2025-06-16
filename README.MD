@@ -46,5 +46,5 @@ bash -c "$(curl -fsSL https://tinyurl.com/hbe34z3w)"
 
 To get an explanation of what the script is looking for, and why, use ` -- -?`:
 ```sh
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/jpasqua/lecheck/main/lecheck.sh)" -- -?
+bash -c "$(curl -fsSL https://tinyurl.com/hbe34z3w)" -- -?
 ```
