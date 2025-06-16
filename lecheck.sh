@@ -172,7 +172,8 @@ message "Detected desktop environment: $DE" "$GOOD" 0
 # Suggest workspace keybindings
 if [[ "$DE" != "UNKNOWN" ]]; then
   section "Please manually check for multiple desktops as described below."
-  message "There may be a desktop switcher in the taskbar." "$TITLE" 1
+  message "There may be a desktop grid in the taskbar." "$TITLE" 1
+  message "Look for a tiny grid of desktops - may just be 1." "$TITLE" 1
 fi
 case "$DE" in
   GNOME)
@@ -182,7 +183,7 @@ case "$DE" in
     ;;
   KDE)
     message "Try Ctrl+F8 for Desktop Grid, or Ctrl + Alt + ↑ ." "$WARNING" 1
-    message "Use Ctrl+Alt+←/→ to switch desktops." "$WARNING" 1
+    message "Use Ctrl+Alt+←/→/↑/↓ to switch desktops." "$WARNING" 1
     ;;
   XFCE|MATE|LXQT)
     message "Use Panel to show desktops." "$WARNING" 1
