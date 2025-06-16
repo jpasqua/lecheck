@@ -1,4 +1,5 @@
-# A script to help examine a Linux environment before a user starts a remote exam.
+# Linux Environment Check
+A script to help examine a Linux environment before a user starts a remote exam.
 
 ## Download the script, set permissions, and run it:
 ```sh
