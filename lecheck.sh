@@ -173,7 +173,7 @@ message "Detected desktop environment: $DE" "$GOOD" 0
 if [[ "$DE" != "UNKNOWN" ]]; then
   section "Please manually check for multiple desktops as described below."
   message "There may be a desktop grid in the taskbar." "$TITLE" 1
-  message "Look for a tiny grid of desktops - may just be 1." "$TITLE" 1
+  message "Look for a tiny grid of desktops; there may just be 1." "$TITLE" 1
 fi
 case "$DE" in
   GNOME)
